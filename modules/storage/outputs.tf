@@ -1,0 +1,1 @@
+output "storage_id" { value = azurerm_storage_account.secure_storage.id }

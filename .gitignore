@@ -1,0 +1,16 @@
+# Local terraform directories (plugins)
+.terraform/
+
+# Distributed planetary state (if you ever use local state by accident)
+*.tfstate
+*.tfstate.*
+
+# Crash logs
+crash.log
+
+# Terraform Plan files (The specific one you asked for)
+*.tfplan
+
+# Ignore variables files that might contain secrets
+# (We use terraform.tfvars for values, but usually exclude them in teams)
+# terraform.tfvars
