@@ -4,6 +4,29 @@ module "resource_group" {
   location = var.location # Refers to variable "location" in root variables.tf
 }
 
+module "database" {
+  source              = "./modules/database"
+  resource_group_name = var.rg_name
+  location            = var.location
+  
+  cosmos_account_name = "amresume-db-001" # Ensure this remains globally unique
+}
+
+module "api" {
+  source              = "./modules/api"
+  resource_group_name = var.rg_name
+  location            = var.location # API can be in a different region than the storage and database, but for simplicity we can keep it the same
+  
+  # GLOBALLY UNIQUE NAMES
+  function_app_name   = "amresume-api-001"
+  fn_storage_name     = "amapistore001"
+
+  # Pass outputs from previous modules directly into the API module
+  frontend_url        = module.storage.website_url
+  cosmos_endpoint     = module.database.endpoint
+  cosmos_key          = module.database.primary_key
+}
+
 module "network" {
   source                = "./modules/network"
   resource_group_name   = module.resource_group.name

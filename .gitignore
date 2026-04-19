@@ -1,9 +1,11 @@
 # Local terraform directories (plugins)
 .terraform/
+.terraform.lock.hcl
 
 # Distributed planetary state (if you ever use local state by accident)
 *.tfstate
 *.tfstate.*
+*.tfvars
 
 # Crash logs
 crash.log
@@ -14,3 +16,7 @@ crash.log
 # Ignore variables files that might contain secrets
 # (We use terraform.tfvars for values, but usually exclude them in teams)
 # terraform.tfvars
+
+# Node modules
+backend/node_modules/
+backend/package-lock.json
