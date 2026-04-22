@@ -1,0 +1,53 @@
+name: Deploy Azure Resume
+
+# Trigger this pipeline every time you push to the main branch
+on:
+  push:
+    branches:
+      - main
+
+# Set up the credentials Terraform needs to authenticate
+env:
+  ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
+  ARM_CLIENT_SECRET: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
+  ARM_SUBSCRIPTION_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
+  ARM_TENANT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).tenantId }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Download your code onto the GitHub runner
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Install Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.14.8" # whichever version you are using locally
+
+      # 3. Initialize Terraform (Connecting to your amtfstate001 vault)
+      - name: Terraform Init
+        run: terraform init
+
+      # 4. Apply Terraform (Automatically approve the changes)
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+
+      # 5. Log into Azure CLI using your stored secret
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # 6. Upload your website files to the Storage Account
+      - name: Upload Website to Blob Storage
+        run: |
+          az storage blob upload-batch \
+            --source ./website \
+            --destination '$web' \
+            --account-name amsecuredstore001 \
+            --auth-mode login \
+            --overwrite
