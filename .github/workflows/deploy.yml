@@ -42,23 +42,18 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # 6. Get the current IP of the GitHub runner
-      - name: Get GitHub Runner IP
-        id: ip
-        uses: haythem/public-ip@v1.3
-
-      # 7. Temporarily add the runner IP to the Azure Storage firewall
-      - name: Whitelist Runner IP
+      # 6. Temporarily open the Storage Account firewall to bypass regional routing
+      - name: Open Firewall
         run: |
-          az storage account network-rule add \
+          az storage account update \
             --resource-group rg-portfolio-prod \
-            --account-name amsecuredstore001 \
-            --ip-address ${{ steps.ip.outputs.ipv4 }}
+            --name amsecuredstore001 \
+            --default-action Allow
           
-          echo "Waiting 30 seconds for Azure firewall rules to propagate globally..."
+          echo "Waiting 30 seconds for Azure firewall rules to propagate..."
           sleep 30
 
-      # 8. Upload your website files to the Storage Account
+      # 7. Upload your website files to the Storage Account
       - name: Upload Website to Blob Storage
         run: |
           az storage blob upload-batch \
@@ -68,11 +63,11 @@ jobs:
             --auth-mode login \
             --overwrite
 
-      # 9. Remove the IP from the firewall (Runs even if the upload fails)
-      - name: Revoke Runner IP Access
-        if: always() && steps.ip.outcome == 'success'
+      # 8. Close the Storage Account firewall (Runs even if the upload fails)
+      - name: Close Firewall
+        if: always()
         run: |
-          az storage account network-rule remove \
+          az storage account update \
             --resource-group rg-portfolio-prod \
-            --account-name amsecuredstore001 \
-            --ip-address ${{ steps.ip.outputs.ipv4 }}
+            --name amsecuredstore001 \
+            --default-action Deny
