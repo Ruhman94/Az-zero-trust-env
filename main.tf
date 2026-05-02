@@ -4,19 +4,35 @@ module "resource_group" {
   location = var.location # Refers to variable "location" in root variables.tf
 }
 
+resource "azurerm_log_analytics_workspace" "law" {
+  name                = "resume-law-001"
+  location            = module.resource_group.location
+  resource_group_name = module.resource_group.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
+
+resource "azurerm_container_app_environment" "env" {
+  name                       = "resume-env-001"
+  location                   = module.resource_group.location
+  resource_group_name        = module.resource_group.name
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.law.id
+}
+# ==========================================
+
 module "database" {
   source              = "./modules/database"
-  resource_group_name = var.rg_name
-  location            = var.location
+  resource_group_name = module.resource_group.name
+  location            = module.resource_group.location
   
   cosmos_account_name = "amresume-db-001" # Ensure this remains globally unique
 }
 
 module "api" {
-  source              = "./modules/api"
+  source                       = "./modules/api"
   container_app_environment_id = azurerm_container_app_environment.env.id
-  resource_group_name = var.rg_name
-  location            = var.location # API can be in a different region than the storage and database, but for simplicity we can keep it the same
+  resource_group_name          = module.resource_group.name
+  location                     = module.resource_group.location 
   
   # GLOBALLY UNIQUE NAMES
   function_app_name   = "amresume-api-001"
@@ -52,7 +68,7 @@ module "bastion" {
   resource_group_name = module.resource_group.name
   location            = module.resource_group.location
   bastion_subnet_id   = module.network.bastion_subnet_id
-  deploy_bastion      = false # Set to false to avoid costs for Bastion if not demonstrating it, set to true to deploy Bastion
+  deploy_bastion      = false # Set to false to avoid costs for Bastion
 }
 
 module "compute" {
@@ -60,5 +76,5 @@ module "compute" {
   resource_group_name = module.resource_group.name
   location            = module.resource_group.location
   subnet_id           = module.network.subnet_id
-  deploy_vm           = false # set to false to avoid costs for VM if not demonstrating it, set to true to deploy the VM
+  deploy_vm           = false # set to false to avoid costs for VM
 }

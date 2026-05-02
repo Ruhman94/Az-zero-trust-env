@@ -26,13 +26,13 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "1.14.8" # whichever version you are using locally
+          terraform_version: "1.14.8"
 
-      # 3. Initialize Terraform (Connecting to your amtfstate001 vault)
+      # 3. Initialize Terraform
       - name: Terraform Init
         run: terraform init
 
-      # 4. Apply Terraform (Automatically approve the changes)
+      # 4. Apply Terraform
       - name: Terraform Apply
         run: terraform apply -auto-approve
 
@@ -42,7 +42,23 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # 6. Upload your website files to the Storage Account
+      # 6. Get the current IP of the GitHub runner
+      - name: Get GitHub Runner IP
+        id: ip
+        uses: haythem/public-ip@v1.3
+
+      # 7. Temporarily add the runner IP to the Azure Storage firewall
+      - name: Whitelist Runner IP
+        run: |
+          az storage account network-rule add \
+            --resource-group YOUR_RESOURCE_GROUP_NAME \
+            --account-name amsecuredstore001 \
+            --ip-address ${{ steps.ip.outputs.ipv4 }}
+          
+          echo "Waiting 30 seconds for Azure firewall rules to propagate globally..."
+          sleep 30
+
+      # 8. Upload your website files to the Storage Account
       - name: Upload Website to Blob Storage
         run: |
           az storage blob upload-batch \
@@ -51,3 +67,12 @@ jobs:
             --account-name amsecuredstore001 \
             --auth-mode login \
             --overwrite
+
+      # 9. Remove the IP from the firewall (Runs even if the upload fails)
+      - name: Revoke Runner IP Access
+        if: always()
+        run: |
+          az storage account network-rule remove \
+            --resource-group YOUR_RESOURCE_GROUP_NAME \
+            --account-name amsecuredstore001 \
+            --ip-address ${{ steps.ip.outputs.ipv4 }}
