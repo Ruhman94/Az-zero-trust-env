@@ -5,7 +5,7 @@ module "resource_group" {
 }
 
 resource "azurerm_log_analytics_workspace" "law" {
-  name                = "resume-law-001"
+  name                = "resume-law-002"
   location            = module.resource_group.location
   resource_group_name = module.resource_group.name
   sku                 = "PerGB2018"
@@ -13,7 +13,7 @@ resource "azurerm_log_analytics_workspace" "law" {
 }
 
 resource "azurerm_container_app_environment" "env" {
-  name                       = "resume-env-001"
+  name                       = "resume-env-002"
   location                   = module.resource_group.location
   resource_group_name        = module.resource_group.name
   log_analytics_workspace_id = azurerm_log_analytics_workspace.law.id
@@ -35,8 +35,8 @@ module "api" {
   location                     = module.resource_group.location 
   
   # GLOBALLY UNIQUE NAMES
-  function_app_name   = "amresume-api-001"
-  fn_storage_name     = "amapistore001"
+  function_app_name   = "amresume-api-002"
+  fn_storage_name     = "amapistore002"
 
   # Pass outputs from previous modules directly into the API module
   frontend_url        = module.storage.website_url
