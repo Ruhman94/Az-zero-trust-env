@@ -70,7 +70,7 @@ jobs:
 
       # 9. Remove the IP from the firewall (Runs even if the upload fails)
       - name: Revoke Runner IP Access
-        if: always()
+        if: always() && steps.ip.outcome == 'success'
         run: |
           az storage account network-rule remove \
             --resource-group YOUR_RESOURCE_GROUP_NAME \
