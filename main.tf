@@ -14,6 +14,7 @@ module "database" {
 
 module "api" {
   source              = "./modules/api"
+  container_app_environment_id = azurerm_container_app_environment.env.id
   resource_group_name = var.rg_name
   location            = var.location # API can be in a different region than the storage and database, but for simplicity we can keep it the same
   

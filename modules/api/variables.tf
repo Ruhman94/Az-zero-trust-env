@@ -21,3 +21,8 @@ variable "frontend_url" {
   type        = string
   description = "The static website URL for strict CORS configuration"
 }
+
+variable "container_app_environment_id" {
+  type        = string
+  description = "The ID of the Container App Environment"
+}
