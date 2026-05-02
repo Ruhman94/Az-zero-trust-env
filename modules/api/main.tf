@@ -1,18 +1,3 @@
-resource "azurerm_log_analytics_workspace" "law" {
-  name                = "resume-law-001"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  sku                 = "PerGB2018"
-  retention_in_days   = 30
-}
-
-resource "azurerm_container_app_environment" "env" {
-  name                       = "resume-env-001"
-  location                   = var.location
-  resource_group_name        = var.resource_group_name
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.law.id
-}
-
 resource "azurerm_container_app" "api" {
   name                         = var.function_app_name
   container_app_environment_id = azurerm_container_app_environment.env.id
@@ -21,7 +6,7 @@ resource "azurerm_container_app" "api" {
 
   template {
     container {
-      name   = "resume-api-container"
+      name = "resume-api-container"
       # Temporary placeholder image to establish infrastructure
       image  = "amm94/amresumeapi:v1"
       cpu    = 0.25
@@ -43,11 +28,22 @@ resource "azurerm_container_app" "api" {
     allow_insecure_connections = false
     external_enabled           = true
     target_port                = 80
-    
+
+    cors {
+      allowed_origins = [
+        "https://aalmohaimeed.com",
+        "https://www.aalmohaimeed.com",
+        "http://127.0.0.1:5500",
+        "http://localhost:5500"
+      ]
+      allowed_methods    = ["GET", "OPTIONS"]
+      allowed_headers    = ["*"]
+      max_age_in_seconds = 3600
+    }
+
     traffic_weight {
       latest_revision = true
       percentage      = 100
     }
-  
   }
 }
