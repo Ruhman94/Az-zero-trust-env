@@ -51,7 +51,7 @@ jobs:
       - name: Whitelist Runner IP
         run: |
           az storage account network-rule add \
-            --resource-group YOUR_RESOURCE_GROUP_NAME \
+            --resource-group rg-portfolio-prod \
             --account-name amsecuredstore001 \
             --ip-address ${{ steps.ip.outputs.ipv4 }}
           
@@ -73,6 +73,6 @@ jobs:
         if: always() && steps.ip.outcome == 'success'
         run: |
           az storage account network-rule remove \
-            --resource-group YOUR_RESOURCE_GROUP_NAME \
+            --resource-group rg-portfolio-prod \
             --account-name amsecuredstore001 \
             --ip-address ${{ steps.ip.outputs.ipv4 }}
