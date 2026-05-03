@@ -36,7 +36,7 @@ resource "azurerm_container_app" "api" {
         "http://127.0.0.1:5500",
         "http://localhost:5500"
       ]
-      allowed_methods    = ["GET", "POST", "OPTIONS"]
+      allowed_methods    = ["GET", "OPTIONS"]
       allowed_headers    = ["Content-Type"] # Locked down from "*"
       max_age_in_seconds = 3600
     }
