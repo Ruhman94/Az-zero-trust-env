@@ -22,27 +22,48 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Install Terraform
+      # 2. Security Stage
+      - name: Run Checkov Security Scan
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: .  # Scan the entire repository for Terraform files
+          framework: terraform
+          quiet: true  # Suppress output unless there are issues
+          # soft_fail: true  # Optional: Don't fail the pipeline on security issues, just report them
+
+      # 3. FINOPS Stage
+      - name: Setup Infracost
+        uses: infracost/actions/setup@v3
+        with:
+          api-key: ${{ secrets.INFRACOST_API_KEY }}
+
+      - name: Generate Infracost Report
+        run: |
+          infracost breakdown --path . --format table --out-file /tmp/infracost.txt
+          cat /tmp/infracost.txt
+
+
+      # 4. Install Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.14.8"
 
-      # 3. Initialize Terraform
+      # 5. Initialize Terraform
       - name: Terraform Init
         run: terraform init
 
-      # 4. Apply Terraform
+      # 6 . Apply Terraform
       - name: Terraform Apply
         run: terraform apply -auto-approve
 
-      # 5. Log into Azure CLI using your stored secret
+      # 7. Log into Azure CLI using your stored secret
       - name: Azure Login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # 6. Temporarily open the Storage Account firewall to bypass regional routing
+      # 8. Temporarily open the Storage Account firewall to bypass regional routing
       - name: Open Firewall
         run: |
           az storage account update \
@@ -53,7 +74,7 @@ jobs:
           echo "Waiting 30 seconds for Azure firewall rules to propagate..."
           sleep 30
 
-      # 7. Upload your website files to the Storage Account
+      # 9. Upload your website files to the Storage Account
       - name: Upload Website to Blob Storage
         run: |
           az storage blob upload-batch \
@@ -63,7 +84,7 @@ jobs:
             --auth-mode login \
             --overwrite
 
-      # 8. Close the Storage Account firewall (Runs even if the upload fails)
+      # 10. Close the Storage Account firewall (Runs even if the upload fails)
       - name: Close Firewall
         if: always()
         run: |
