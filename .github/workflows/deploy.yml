@@ -24,7 +24,7 @@ jobs:
 
       # 2. Security Stage
       - name: Run Checkov Security Scan
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@v12
         with:
           directory: .  # Scan the entire repository for Terraform files
           framework: terraform
@@ -42,7 +42,6 @@ jobs:
           infracost breakdown --path . --format table --out-file /tmp/infracost.txt
           cat /tmp/infracost.txt
 
-
       # 4. Install Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -53,7 +52,7 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      # 6 . Apply Terraform
+      # 6. Apply Terraform
       - name: Terraform Apply
         run: terraform apply -auto-approve
 
@@ -63,8 +62,19 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+      # --- JIT CLOUDFLARE BYPASS ---
+      - name: Drop Cloudflare Shield (Grey Cloud)
+        run: |
+          echo "Temporarily disabling Cloudflare proxy for Azure validation..."
+          curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/${{ secrets.CF_ZONE_ID }}/dns_records/${{ secrets.CF_RECORD_ID }}" \
+               -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
+               -H "Content-Type: application/json" \
+               --data '{"proxied":false}'
+          
+          echo "Waiting 60 seconds for DNS propagation..."
+          sleep 60
 
-      # 8. Temporarily open the Storage Account firewall to bypass regional routing
       - name: Open Firewall
         run: |
           az storage account update \
@@ -75,7 +85,6 @@ jobs:
           echo "Waiting 30 seconds for Azure firewall rules to propagate..."
           sleep 30
 
-      # 9. Upload your website files to the Storage Account
       - name: Upload Website to Blob Storage
         run: |
           az storage blob upload-batch \
@@ -85,11 +94,18 @@ jobs:
             --auth-mode login \
             --overwrite
 
-      # 10. Close the Storage Account firewall (Runs even if the upload fails)
-      - name: Close Firewall
+      # --- JIT RESTORATION (FIREWALL & CLOUDFLARE) ---
+      - name: Close Firewall & Restore Cloudflare
         if: always() && steps.azure_login.conclusion == 'success'
         run: |
+          echo "Restoring Azure Zero Trust Perimeter..."
           az storage account update \
             --resource-group rg-portfolio-prod \
             --name amsecuredstore001 \
             --default-action Deny
+            
+          echo "Restoring Cloudflare Proxy Shield (Orange Cloud)..."
+          curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/${{ secrets.CF_ZONE_ID }}/dns_records/${{ secrets.CF_RECORD_ID }}" \
+               -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
+               -H "Content-Type: application/json" \
+               --data '{"proxied":true}'
