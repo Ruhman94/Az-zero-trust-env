@@ -15,6 +15,13 @@ resource "azurerm_storage_account" "secure_storage" {
     }
   }
 
+# --- DOMAIN CONFIGURATION ---
+  custom_domain {
+    name          = "aalmohaimeed.com"
+    # Set to true because you utilized "indirect CNAME validation" in Azure
+    use_subdomain = true 
+  }
+
   # --- RISK ACCEPTANCE (SUPPRESSIONS) ---
   # checkov:skip=CKV_AZURE_206: LRS replication is selected intentionally for cost optimization (FinOps).
   # checkov:skip=CKV2_AZURE_1: Customer Managed Keys (CMK) require Key Vault, adding unnecessary cost.
