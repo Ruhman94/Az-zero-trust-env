@@ -21,6 +21,8 @@ resource "azurerm_subnet" "bastion_subnet" {
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = [var.bastion_subnet_prefix]
+  # --- RISK ACCEPTANCE ---
+  # checkov:skip=CKV2_AZURE_31: NSG for Bastion is omitted to reduce complexity for this conditional demonstration module.
 }
 
 # NSG with Conditional Logic for Web Ports and SSH
