@@ -63,18 +63,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
         
-      # --- JIT CLOUDFLARE BYPASS ---
-      - name: Drop Cloudflare Shield (Grey Cloud)
-        run: |
-          echo "Temporarily disabling Cloudflare proxy for Azure validation..."
-          curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/${{ secrets.CF_ZONE_ID }}/dns_records/${{ secrets.CF_RECORD_ID }}" \
-               -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
-               -H "Content-Type: application/json" \
-               --data '{"proxied":false}'
-          
-          echo "Waiting 60 seconds for DNS propagation..."
-          sleep 60
-
+      # 8. Open Firewall
       - name: Open Firewall
         run: |
           az storage account update \
@@ -85,6 +74,7 @@ jobs:
           echo "Waiting 30 seconds for Azure firewall rules to propagate..."
           sleep 30
 
+      # 9. Upload Website to Blob Storage
       - name: Upload Website to Blob Storage
         run: |
           az storage blob upload-batch \
@@ -94,8 +84,8 @@ jobs:
             --auth-mode login \
             --overwrite
 
-      # --- JIT RESTORATION (FIREWALL & CLOUDFLARE) ---
-      - name: Close Firewall & Restore Cloudflare
+      # 10. Close Firewall
+      - name: Close Firewall
         if: always() && steps.azure_login.conclusion == 'success'
         run: |
           echo "Restoring Azure Zero Trust Perimeter..."
@@ -103,9 +93,3 @@ jobs:
             --resource-group rg-portfolio-prod \
             --name amsecuredstore001 \
             --default-action Deny
-            
-          echo "Restoring Cloudflare Proxy Shield (Orange Cloud)..."
-          curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/${{ secrets.CF_ZONE_ID }}/dns_records/${{ secrets.CF_RECORD_ID }}" \
-               -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
-               -H "Content-Type: application/json" \
-               --data '{"proxied":true}'
