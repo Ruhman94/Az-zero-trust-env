@@ -389,6 +389,7 @@
           </div>
         </div>
       </section>
+
       <section class="projects-section-container" id="projects">
         <div class="projects-section-div">
           <div class="section-heading" data-aos="fade-up">
@@ -407,34 +408,32 @@
               <div class="project-box project-box2" id="project-box1">
                 <div class="info-div">
                   <img
-                    src="src/png/azurelogo.png"
-                    alt="Azure favicon"
+                    src="src/png/terraformlogo.png"
+                    alt="IaC favicon"
                     class="faviconforProject"
                   />
-                  <article class="ProjectHeading">
-                    Azure Zero Trust Infrastructure
+                 <article class="ProjectHeading">
+                    DevOps CI/CD & Infrastructure Automation
                   </article>
                   <p class="ProjectDescription">
-                    Designed and deployed a highly available portfolio API
-                    utilizing Terraform for automated Azure Container App
-                    provisioning. Integrated continuous observability via Log
-                    Analytics and applied zero-trust principles through strict
-                    CORS policies and secure Cosmos DB integration.
-                    <!-- 
-<div class="project-buttons">
-  <a href="#" target="_blank" class="github-redirect" aria-label="Visit GitHub repository">
-    <img src="src/svg/github.svg" alt="github redirect button" />
-  </a>
-  <a href="#" target="_blank" class="cta" aria-label="Visit Live Project">
-    <span>Live view</span>
-    <svg viewBox="0 0 13 10" height="10px" width="15px">
-      <path d="M1,5 L11,5"></path>
-      <polyline points="8 1 12 5 8 9"></polyline>
-    </svg>
-  </a>
-</div> 
--->
+                    Built a fully automated cloud deployment pipeline using <strong>Terraform</strong> and <strong>GitHub Actions</strong> to provision infrastructure, including <strong>Azure Container Apps</strong>. The workflow automatically applies <strong>Terraform</strong> state and securely deploys frontend assets to an <strong>Azure Storage</strong> account behind a dynamic firewall.<br><br>
+                    [+] <strong>Security:</strong> Integrated <strong>Checkov</strong> scans in the pipeline to ensure code quality and configuration compliance with best practices.<br>
+                    [+] <strong>FinOps:</strong> Cloud costs are projected prior to deployment using <strong>Infracost</strong>, providing real-time feedback on changesets and preventing budget overruns.
                   </p>
+
+                  <div class="project-buttons">
+                    <a
+                      href="https://github.com/Ruhman94/Az-zero-trust-env/blob/main/.github/workflows/deploy.yml"
+                      target="_blank"
+                      class="github-redirect"
+                      aria-label="Visit GitHub repository"
+                    >
+                      <img
+                        src="src/svg/github.svg"
+                        alt="github redirect button"
+                      />
+                    </a>
+                  </div>
                 </div>
                 <div class="image-div">
                   <video
@@ -442,14 +441,8 @@
                     loop
                     muted
                     playsinline
-                    style="
-                      width: 100%;
-                      height: 100%;
-                      object-fit: cover;
-                      border-radius: 20px;
-                    "
                   >
-                    <source src="src/mp4/Zero.mp4" type="video/mp4" />
+                    <source src="src/mp4/pipeline.mp4" type="video/mp4" />
                   </video>
                 </div>
               </div>
@@ -459,32 +452,32 @@
               <div class="project-box project-box2" id="project-box2">
                 <div class="info-div">
                   <img
-                    src="src/png/ccsp.png"
-                    alt="Security favicon"
+                    src="src/png/azurelogo.png"
+                    alt="Backend favicon"
                     class="faviconforProject"
                   />
                   <article class="ProjectHeading">
-                    Vulnerability analysis and AI Security Red Teaming
+                    Containerized Node.js API & NoSQL Database
                   </article>
                   <p class="ProjectDescription">
-                    AI red teaming analysis on NVIDIA machine learning models.
-                    Conducted rigorous vulnerability research to evaluate
-                    security boundaries, directly refining model architectures.
-                    <!-- 
-<div class="project-buttons">
-  <a href="#" target="_blank" class="github-redirect" aria-label="Visit GitHub repository">
-    <img src="src/svg/github.svg" alt="github redirect button" />
-  </a>
-  <a href="#" target="_blank" class="cta" aria-label="Visit Live Project">
-    <span>Live view</span>
-    <svg viewBox="0 0 13 10" height="10px" width="15px">
-      <path d="M1,5 L11,5"></path>
-      <polyline points="8 1 12 5 8 9"></polyline>
-    </svg>
-  </a>
-</div> 
--->
+                    Built a containerized backend API using <strong>Node.js</strong> and <strong>Express.js</strong>, deployed as a serverless microservice via <strong>Azure Container Apps</strong>. The application utilizes the <strong>Azure Cosmos SDK</strong> to execute asynchronous data pipelines, managing persistent read and update operations within a NoSQL database environment.<br><br>
+                    [+] <strong>Security:</strong> Hardened the application layer by enforcing strict <strong>CORS</strong> origin policies and implementing IP-based rate limiting to prevent endpoint abuse.<br>
+                    [+] <strong>Data Architecture:</strong> Engineered asynchronous CRUD operations against a serverless <strong>Azure Cosmos DB</strong> instance to ensure high-availability state management.
                   </p>
+
+                  <div class="project-buttons">
+                    <a
+                      href="https://github.com/Ruhman94/Az-zero-trust-env/blob/main/backend/server.js"
+                      target="_blank"
+                      class="github-redirect"
+                      aria-label="Visit GitHub repository"
+                    >
+                      <img
+                        src="src/svg/github.svg"
+                        alt="github redirect button"
+                      />
+                    </a>
+                  </div>
                 </div>
                 <div class="image-div">
                   <video
@@ -492,14 +485,11 @@
                     loop
                     muted
                     playsinline
-                    style="
-                      width: 100%;
-                      height: 100%;
-                      object-fit: cover;
-                      border-radius: 20px;
-                    "
                   >
-                    <source src="src/mp4/Cybersecurity.mp4" type="video/mp4" />
+                    <source
+                      src="src/mp4/Cont.mp4"
+                      type="video/mp4"
+                    />
                   </video>
                 </div>
               </div>
@@ -510,33 +500,31 @@
                 <div class="info-div">
                   <img
                     src="src/png/azurelogo.png"
-                    alt="Cloud favicon"
+                    alt="Security favicon"
                     class="faviconforProject"
                   />
                   <article class="ProjectHeading">
-                    Cloudflare & Azure Logic Automation
+                    Azure Zero Trust Architecture & JIT Access
                   </article>
                   <p class="ProjectDescription">
-                    Architected a personal cloud-based web infrastructure.
-                    Integrated Cloudflare domain validation with Azure Logic
-                    Apps and Azure Communication Services to establish
-                    automated, secure cloud workflows and DNS record
-                    verification.
-                    <!-- 
-<div class="project-buttons">
-  <a href="#" target="_blank" class="github-redirect" aria-label="Visit GitHub repository">
-    <img src="src/svg/github.svg" alt="github redirect button" />
-  </a>
-  <a href="#" target="_blank" class="cta" aria-label="Visit Live Project">
-    <span>Live view</span>
-    <svg viewBox="0 0 13 10" height="10px" width="15px">
-      <path d="M1,5 L11,5"></path>
-      <polyline points="8 1 12 5 8 9"></polyline>
-    </svg>
-  </a>
-</div> 
--->
+                    Architected a strict <strong>Azure Zero Trust</strong> perimeter by enforcing default-deny network configurations across <strong>Azure Storage</strong> and <strong>Azure Container Apps</strong> environments. The infrastructure securely isolates internal workloads while maintaining controlled public accessibility.<br><br>
+                    [+] <strong>Network Security:</strong> Restricted public ingress exclusively to verified <strong>Cloudflare</strong> edge nodes, guaranteeing all external traffic routes through the Web Application Firewall.<br>
+                    [+] <strong>Access Automation:</strong> Developed automated <strong>Azure CLI</strong> workflows for Just-In-Time (JIT) access, safely puncturing and restoring the firewall dynamically during CI/CD pipeline deployments.
                   </p>
+
+                  <div class="project-buttons">
+                    <a
+                      href="https://github.com/Ruhman94/Az-zero-trust-env/blob/main/modules/network/main.tf"
+                      target="_blank"
+                      class="github-redirect"
+                      aria-label="Visit GitHub repository"
+                    >
+                      <img
+                        src="src/svg/github.svg"
+                        alt="github redirect button"
+                      />
+                    </a>
+                  </div>
                 </div>
                 <div class="image-div">
                   <video
@@ -544,19 +532,32 @@
                     loop
                     muted
                     playsinline
-                    style="
-                      width: 100%;
-                      height: 100%;
-                      object-fit: cover;
-                      border-radius: 20px;
-                    "
                   >
                     <source
-                      src="src/mp4/automationproject.mp4"
+                      src="src/mp4/ZeroTrust.mp4"
                       type="video/mp4"
                     />
                   </video>
                 </div>
+              </div>
+            </div>
+
+            <div class="project-box-wrapper" data-aos="fade-up">
+              <div class="project-box project-box2" id="project-box4">
+                <div class="info-div">
+                  <img
+                    src="src/png/ccsp.png"
+                    alt="Security favicon"
+                    class="faviconforProject"
+                  />
+                  <article class="ProjectHeading">
+                    AI Security & Vulnerability Red Teaming
+                  </article>
+                  <p class="ProjectDescription">
+                    Conducted comprehensive <strong>AI Red Teaming</strong> and vulnerability analysis on <strong>NVIDIA</strong> machine learning models. Executed rigorous adversarial testing to evaluate security boundaries and identify systemic risks within the AI infrastructure.<br><br>
+                    [+] <strong>Vulnerability Evaluation:</strong> Executed advanced adversarial tactics to map model vulnerabilities, test security perimeters, and identify critical safety gaps.<br>
+                    [+] <strong>Architecture Refinement:</strong> Translated threat analysis into actionable engineering data, directly refining model architectures and improving defensive alignments.
+                  </p>
               </div>
             </div>
           </div>
@@ -581,11 +582,10 @@
             "
           >
             <article tabindex="0" aria-label="quote">
-              "Knowledge is the currency of growth, and I'm a relentless
+              "Knowledge is the currency of growth, and I'm a long-term
               investor."
             </article>
 
-            <!-- INJECTED VISITOR COUNTER -->
             <article
               style="
                 font-size: 1.2rem;
@@ -654,7 +654,7 @@
     </script>
     <script>
       function openURL() {
-        // REPLACE THE URL WITH THE PATH TO YOUR RESUME
+        // THE URL WITH THE PATH TO YOUR RESUME
         var url = "CAMM.pdf";
         window.open(url, "_blank");
       }

@@ -1964,3 +1964,97 @@ footer {
     margin-top: 100px;
   }
 }
+
+/* ==================================================
+   FINAL PROJECT CARD STABILIZATION
+   ================================================== */
+
+/* 1. Unshackle the box heights so content can breathe */
+.project-box, .project-box1, .project-box2 {
+  height: auto !important;
+  min-height: fit-content !important;
+  display: flex;
+  align-items: stretch !important;
+}
+
+/* 2. Control the internal text area */
+.info-div {
+  height: auto !important;
+  min-height: min-content !important;
+  flex: 1 1 auto !important;
+  padding-top: 40px !important;
+  padding-bottom: 30px !important;
+  justify-content: flex-start !important;
+}
+
+/* 3. Center and constrain the video/image area */
+.image-div {
+  height: auto !important;
+  min-height: min-content !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 30px !important;
+}
+
+.image-div video {
+  max-height: 320px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+/* 4. Force STRICT boundaries on the header icons */
+.project-header-icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+  flex-shrink: 0 !important;
+  height: 50px !important; /* Locks the header row height */
+}
+
+/* Kill the giant raw image sizes */
+.project-header-icons .faviconforProject {
+  width: 50px !important;
+  height: 50px !important;
+  max-width: 50px !important;
+  max-height: 50px !important;
+  min-width: 0 !important; /* Overrides broken max-content rules */
+  object-fit: contain !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+.project-header-icons .github-redirect img {
+  width: 35px !important;
+  height: 35px !important;
+  max-width: 35px !important;
+  max-height: 35px !important;
+  min-width: 0 !important;
+  object-fit: contain !important;
+  margin: 0 !important;
+  filter: brightness(2);
+}
+
+/* 5. Mobile Layout Resets */
+@media screen and (max-width: 998px) {
+  .project-box {
+    flex-direction: column !important;
+  }
+  .image-div {
+    padding: 0 40px 40px 40px !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .info-div {
+    padding-left: 25px !important;
+    padding-right: 25px !important;
+  }
+  .image-div {
+    padding: 0 25px 30px 25px !important;
+  }
+}
+
